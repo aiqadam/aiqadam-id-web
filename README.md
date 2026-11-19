@@ -8,3 +8,6 @@ The static login page of AI Qadam ID for the QA environment, served by GitHub Pa
   module keys live only in the Qadam Flow project.
 - One custom domain per GitHub Pages repository, so prod (`id.aiqadam.org`) gets its own repository.
 - QA only: test accounts and made-up data; the legal texts are drafts until a lawyer has reviewed them.
+- `return-stub.html` stands in for a module's return page on QA: it reads the return token from the URL
+  fragment, removes it from the address bar and asks the QA flow `stub-return-verifier` to check it. It is
+  not part of the product and is not carried to prod.
