@@ -164,7 +164,7 @@ siyosat yangilanadi.
 | Profil, roziliklar va roziliklar jurnali | asosiy rozilik amalda bölgan davrda. Agar 3 yil davomida AI Qadamʼdan foydalanmasangiz (kirmasangiz va botlarga murojaat qilmasangiz), profil öçiriladi. Bundan 30 kun oldin sizni Telegramda siz foydalanadigan AI Qadam boti orqali ogohlantiramiz; agar şu vaqt içida kirsangiz yoki botga yozsangiz, profil saqlanib qoladi |
 | Telefon raqami | profil bilan birga |
 | Modullarning öz yozuvlari | modul qoidalari böyiça, lekin modulga rozilik amalda bölgan va hisob mavjud bölgan muddatdan ortiq emas |
-| Modullarga öçiriş sörovini qayta yuboriş uçun Telegram identifikatori | öçirişdan keyin taxminan 65 daqiqa |
+| Modullarga öçiriş sörovini qayta yuboriş uçun Telegram identifikatori | öçirişdan keyin taxminan 65 daqiqa; agar modul öçirişni tasdiqlamagan bölsa — tasdiqlagunça, lekin 7 kundan oşmasdan |
 | Öçirişlar jurnali | modul öçirişni tasdiqlaganidan keyin 35 kun. Jurnalda profil yöq — faqat Telegram identifikatorining kalitli xeşi (HMAC), modul nomi, holat va ikkita sana |
 | Serverdagi zaxira nusxalar | 14 kungaça |
 | Cloudflare R2 dagi şifrlangan zaxira nusxalar | 35 kungaça. Nusxalar öçiriş blokirovkasi bilan himoyalangan va u tugagunça nusxani muddatidan oldin öçirib bölmaydi `[OPEN: O-6 — lock period; per the infrastructure documentation, 30 days]` |
@@ -186,7 +186,8 @@ töğridan-töğri ham öçiriş mumkin. Ikkala holatda ham:
    yozuvlarini öçiradi (5-bölim), şu jumladan, agar bölsa, taşkilotçi huquqlari va
    takliflarini. Agar modul öçirişni tasdiqlamasa, sörov bir soat davomida har 5 daqiqada
    takrorlanadi. Agar bir soatdan keyin ham tasdiq bölmasa, Operatorning masʼul şaxsi xabar oladi
-   va öçirişni qölda yakunlaydi — sörovingizdan keyin 3 iş kunidan keçiktirmay.
+   va moduldagi sababni bartaraf etadi, sörov esa modul tasdiqlagunça har soatda takrorlanadi —
+   sörovingizdan keyin 3 iş kunidan keçiktirmay.
 3. Zaxira nusxalarda maʼlumotlaringiz nusxaning saqlaş muddati tugagunça qoladi (9-bölim):
    serverda 14 kungaça va Cloudflare R2 da 35 kungaça. Bitta odamni nusxadan tanlab öçirib
    bölmaydi. Agar baza qaçondir nusxadan tiklansa, maʼlumotlaringiz qaytmasligi uçun öçirişlar

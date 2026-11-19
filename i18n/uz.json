@@ -93,7 +93,7 @@
   "_v.withdraw.module": "1",
   "_v.withdraw.mailing": "1",
   "bot.start": "AI Qadam ID — AI Qadam xizmatlaridagi yagona profilingiz. Profil, roziliklar va hisobni öçiriş — şu sahifada: {url}",
-  "alert.deletion_failed": "Modul maʼlumotlarni öçirişni tasdiqlamadi.\nModul: {module}\nSörov: {requested}\nQöl bilan öçiring, muddat: {deadline} (ADR-0021), keyin deletion_log qatorini done deb belgilang.",
+  "alert.deletion_failed": "Modul maʼlumotlarni öçirişni tasdiqlamadi. ID sörovni har soatda takrorlaydi.\nModul: {module}\nSörov: {requested}\nMuddat (ADR-0021, ADR-0027): {deadline} kuni oxirigaça. Moduldagi öçiriş qabul qiluvçini tuzating — keyingi takror öçirişni yakunlaydi.",
   "alert.deletion_due_today": "Muddat — bugun.",
   "alert.deletion_overdue": "MUDDATI ÖTGAN."
 }

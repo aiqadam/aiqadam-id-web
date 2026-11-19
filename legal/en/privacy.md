@@ -152,7 +152,7 @@ policy updated.
 | Profile, consents and consent log | while the base consent is in force. If you do not use AI Qadam for 3 years (no log-in and no contact with the bots), the profile is deleted. We warn you in Telegram through the AI Qadam bot you use 30 days before; if you log in or write to the bot in that time, the profile stays |
 | Phone number | together with the profile |
 | Modules' own records | under the module's rules, but no longer than the consent to the module is in force and the account exists |
-| Telegram ID for re-sending a deletion request to modules | about 65 minutes after the deletion |
+| Telegram ID for re-sending a deletion request to modules | about 65 minutes after the deletion; if a module has not acknowledged it — until it does, at most 7 days |
 | Deletion log | 35 days after the module acknowledged the deletion. The log holds no profile — only a keyed hash (HMAC) of the Telegram ID, the module name, a status and two dates |
 | Backups on the server | up to 14 days |
 | Encrypted backups in Cloudflare R2 | up to 35 days. The copies are protected by a deletion lock, and until it ends a copy cannot be deleted early `[OPEN: O-6 — lock period; per the infrastructure documentation, 30 days]` |
@@ -174,7 +174,8 @@ the account directly. In both cases:
    about you (section 5), including organiser rights and invitations if you had any. If a module has
    not acknowledged the deletion, the request is repeated every 5 minutes for an hour. If there is
    still no acknowledgement after an hour, a responsible person of the Operator is notified and
-   completes the deletion by hand — no later than 3 working days after your request.
+   fixes the cause in the module, and the request is repeated every hour until the module
+   acknowledges — no later than 3 working days after your request.
 3. In backups your data stays until the backup expires (section 9): up to 14 days on the server and
    up to 35 days in Cloudflare R2. A single person cannot be removed from a backup. If the database is
    ever restored from a backup, we re-apply the deletion log so that your data does not come back.

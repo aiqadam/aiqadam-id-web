@@ -93,7 +93,7 @@
   "_v.withdraw.module": "1",
   "_v.withdraw.mailing": "1",
   "bot.start": "AI Qadam ID is your single profile for AI Qadam services. Your profile, consents and account deletion are on this page: {url}",
-  "alert.deletion_failed": "A module did not confirm a deletion.\nModule: {module}\nRequested: {requested}\nComplete it by hand by {deadline} (ADR-0021), then mark the deletion_log row done.",
+  "alert.deletion_failed": "A module did not confirm a deletion. ID resends it every hour.\nModule: {module}\nRequested: {requested}\nDeadline (ADR-0021, ADR-0027): {deadline}, inclusive. Repair the module's deletion receiver; the next resend completes the deletion.",
   "alert.deletion_due_today": "Due today.",
   "alert.deletion_overdue": "OVERDUE."
 }

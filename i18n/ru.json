@@ -93,7 +93,7 @@
   "_v.withdraw.module": "1",
   "_v.withdraw.mailing": "1",
   "bot.start": "AI Qadam ID — ваш единый профиль в сервисах AI Qadam. Профиль, согласия и удаление аккаунта — на этой странице: {url}",
-  "alert.deletion_failed": "Модуль не подтвердил удаление данных.\nМодуль: {module}\nЗапрос: {requested}\nУдалите вручную до {deadline} (ADR-0021) и отметьте строку deletion_log как done.",
+  "alert.deletion_failed": "Модуль не подтвердил удаление данных. ID повторяет запрос раз в час.\nМодуль: {module}\nЗапрос: {requested}\nСрок (ADR-0021, ADR-0027): {deadline} включительно. Почините приём удалений в модуле — следующий повтор завершит удаление.",
   "alert.deletion_due_today": "Срок — сегодня.",
   "alert.deletion_overdue": "ПРОСРОЧЕНО."
 }
