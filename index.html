@@ -1,18 +1,20 @@
 <!doctype html>
-<html lang="uz">
+<html lang="uz" class="guard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-ancestors 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org; connect-src 'self' https://app.flow.aiqadam.org https://oauth.telegram.org; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <title>AI Qadam ID (QA)</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-widget.js?22" defer></script>
+  <script src="md.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <main>
-    <h1>AI Qadam ID</h1>
-    <p>QA · test muhit · тестовая среда · test environment</p>
-  </main>
+  <div id="banner" class="banner" role="note"></div>
+  <nav id="langs" class="langs"></nav>
+  <main id="app"></main>
 </body>
 </html>
