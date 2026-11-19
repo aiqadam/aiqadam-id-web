@@ -194,7 +194,8 @@
   function consentScreen(main, prefix, vars, yes, no, need) {
     if (!own([prefix + '.text', prefix + '.yes', prefix + '.no'].concat(need || []))) {
       main.appendChild(el('p', 'msg err', t('err.generic')));
-      main.appendChild(button('common.back', function () { go(session && inForce('base', 'id') ? 'settings' : 'login'); }));
+      // Without the base consent nothing may stay behind: end the session, as "No" does (review R-1).
+      main.appendChild(button('common.back', function () { if (session && inForce('base', 'id')) go('settings'); else logout(null); }));
       return;
     }
     var box = el('section', 'consent');
