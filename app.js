@@ -36,7 +36,16 @@
       return vars && Object.prototype.hasOwnProperty.call(vars, name) ? vars[name] : all;
     });
   }
-  function version(name) { return name + '.v' + t('_v.' + name) + '.' + state.lang; }
+  // A consent or withdrawal screen is shown only in a language whose own file has every string of it and
+  // the version number, so the stored text_version names the text the person saw (W04a review I-2).
+  function own(keys) {
+    var d = dict[state.lang];
+    return !!d && keys.every(function (k) { return typeof d[k] === 'string' && d[k] !== ''; });
+  }
+  function version(name) {
+    var n = own(['_v.' + name]) ? dict[state.lang]['_v.' + name] : '';
+    return /^[1-9][0-9]{0,3}$/.test(n) ? name + '.v' + n + '.' + state.lang : null;
+  }
   function legalUrl(doc) { return 'legal.html?doc=' + doc + '&lang=' + state.lang; }
   function linkOk(u) { return /^legal\.html\?doc=(terms|privacy)&lang=(uz|ru|en)$/.test(u); }
   function serviceVars(module) {
@@ -98,7 +107,8 @@
     if (!window.Telegram || !window.Telegram.Login) return failed({ status: 0, body: {} });
     state.msg = { key: 'login.err.popup', kind: 'note' };
     render();
-    window.Telegram.Login.auth({ bot_id: BOT_ID, lang: state.lang }, function (user) {
+    // Write access lets the ID bot reach a person who signed up only here, e.g. the inactivity warning (ADR-0024).
+    window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: 'write', lang: state.lang }, function (user) {
       if (!user) { state.msg = null; return render(); }
       work(call('login', { widget: user })).then(function (res) {
         if (res.status === 200 && res.body.ok === true && typeof res.body.session === 'string') {
@@ -122,12 +132,12 @@
     session = null; me = null;
     return work(s ? call('logout', { session: s }) : Promise.resolve(null)).then(function () { go('login', msg); });
   }
-  // What the person needs next: the base consent, then (on a return) the module consent, then back.
+  // What the person needs next. On a return, web-return is asked first: it checks the module and return_to
+  // before the consents, so no consent screen is shown for an address it will refuse (W04a review L-3).
   function next(ok) {
     if (ok === false) return;
-    if (!inForce('base', 'id')) return go('age');
-    if (ret && !inForce('module', ret.module)) return go('module', null, { module: ret.module, then: 'return' });
     if (ret) return back();
+    if (!inForce('base', 'id')) return go('age');
     go('settings');
   }
   function back() {
@@ -141,15 +151,22 @@
         // The module now holds the person; end the ID session before leaving.
         return call('logout', { session: s }).catch(function () {}).then(function () { location.replace(target); });
       }
-      go('settings');
+      var reason = res.body && res.body.reason;
+      if (res.status === 409 && reason === 'base_required') return go('age');
+      if (res.status === 409 && reason === 'module_required') return go('module', null, { module: ret.module, then: 'return' });
+      if (res.status === 401) return failed(res);
+      // Refused (e.g. bad return_to, which also drops `ret`): carry on as a plain visit, keeping the message.
       failed(res);
+      go(inForce('base', 'id') ? 'settings' : 'age', state.msg);
     });
   }
 
   // ---- consents ----
   function give(purpose, module, then) {
+    var tv = version(purpose + '.' + module);
+    if (!tv) return failed({ status: -1, body: {} });
     work(call('consent', { session: session, purpose: purpose, module: module, action: 'grant',
-      text_version: version(purpose + '.' + module) })).then(function (res) {
+      text_version: tv })).then(function (res) {
       if (res.status !== 200 || res.body.ok !== true) return failed(res);
       refresh().then(function (ok) {
         if (!ok) return;
@@ -162,8 +179,10 @@
   // msg false: nothing was written, so no "saved" line.
   function after(then, msg) { if (then === 'return' && ret) return back(); go('settings', msg === false ? null : msg || { key: 'settings.saved', kind: 'ok' }); }
   function withdraw(purpose, module) {
+    var tv = version('withdraw.' + purpose);
+    if (!tv) return failed({ status: -1, body: {} });
     work(call('consent', { session: session, purpose: purpose, module: module, action: 'withdraw',
-      text_version: version('withdraw.' + purpose) })).then(function (res) {
+      text_version: tv })).then(function (res) {
       if (res.status !== 200 || res.body.ok !== true) return failed(res);
       if (purpose === 'base') { session = null; me = null; ret = null; return go('login', { key: 'withdraw.base.done', kind: 'ok' }); }
       var done = { key: 'withdraw.' + purpose + '.done', vars: serviceVars(module), kind: 'ok' };
@@ -172,7 +191,12 @@
   }
 
   // ---- screens ----
-  function consentScreen(main, prefix, vars, yes, no) {
+  function consentScreen(main, prefix, vars, yes, no, need) {
+    if (!own([prefix + '.text', prefix + '.yes', prefix + '.no'].concat(need || []))) {
+      main.appendChild(el('p', 'msg err', t('err.generic')));
+      main.appendChild(button('common.back', function () { go(session && inForce('base', 'id') ? 'settings' : 'login'); }));
+      return;
+    }
     var box = el('section', 'consent');
     window.IdMd.block(box, t(prefix + '.text', vars), linkOk);
     main.appendChild(box);
@@ -199,21 +223,25 @@
     },
     base: function (main) {
       consentScreen(main, 'base', serviceVars('events'), function () { give('base', 'id'); },
-        function () { logout({ key: 'base.no_result', kind: 'note' }); });
+        function () { logout({ key: 'base.no_result', kind: 'note' }); }, ['_v.base.id']);
     },
     module: function (main, ctx) {
       consentScreen(main, 'module.' + ctx.module, serviceVars(ctx.module), function () { give('module', ctx.module, ctx.then); },
-        function () { ret = null; go('settings', { key: 'module.' + ctx.module + '.no_result', kind: 'note' }); });
+        function () { ret = null; go('settings', { key: 'module.' + ctx.module + '.no_result', kind: 'note' }); },
+        ['_v.module.' + ctx.module]);
     },
     mailing: function (main, ctx) {
       // Optional; declining changes nothing (consents.md §4).
       consentScreen(main, 'mailing.' + ctx.module, serviceVars(ctx.module), function () { give('mailing', ctx.module, ctx.then); },
-        function () { after(ctx.then, false); });
+        function () { after(ctx.then, false); }, ['_v.mailing.' + ctx.module]);
     },
     confirm: function (main, ctx) {
       var vars = ctx.purpose === 'base' ? {} : serviceVars(ctx.module);
+      var need = ['_v.withdraw.' + ctx.purpose];
+      if (ctx.purpose !== 'base') need.push('service.' + ctx.module + '.name', 'service.' + ctx.module + '.subject');
+      if (ctx.purpose === 'module') need.push('withdraw.module.deleted.' + ctx.module);
       consentScreen(main, 'withdraw.' + ctx.purpose, vars, function () { withdraw(ctx.purpose, ctx.module); },
-        function () { go('settings'); });
+        function () { go('settings'); }, need);
     },
     returning: function (main) {
       main.appendChild(el('p', '', t('return.title', serviceVars(ret ? ret.module : 'events'))));
