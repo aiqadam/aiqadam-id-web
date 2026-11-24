@@ -95,5 +95,6 @@
   "bot.start": "AI Qadam ID is your single profile for AI Qadam services. Your profile, consents and account deletion are on this page: {url}",
   "alert.deletion_failed": "A module did not confirm a deletion. ID resends it every hour.\nModule: {module}\nRequested: {requested}\nDeadline (ADR-0021, ADR-0027): {deadline}, inclusive. Repair the module's deletion receiver; the next resend completes the deletion.",
   "alert.deletion_due_today": "Due today.",
-  "alert.deletion_overdue": "OVERDUE."
+  "alert.deletion_overdue": "OVERDUE.",
+  "alert.deletion_stopped": "A module deletion has stopped: ID can no longer resend it (the id is gone). This is an incident.\nModule: {module}\nRequested: {requested}\nDeadline (ADR-0021): {deadline}, inclusive. Confirm the deletion with the module, then mark the row in deletion_log by hand: status = done, acknowledged_at = the date of the confirmation (ADR-0028)."
 }

@@ -95,5 +95,6 @@
   "bot.start": "AI Qadam ID — AI Qadam xizmatlaridagi yagona profilingiz. Profil, roziliklar va hisobni öçiriş — şu sahifada: {url}",
   "alert.deletion_failed": "Modul maʼlumotlarni öçirişni tasdiqlamadi. ID sörovni har soatda takrorlaydi.\nModul: {module}\nSörov: {requested}\nMuddat (ADR-0021, ADR-0027): {deadline} kuni oxirigaça. Moduldagi öçiriş qabul qiluvçini tuzating — keyingi takror öçirişni yakunlaydi.",
   "alert.deletion_due_today": "Muddat — bugun.",
-  "alert.deletion_overdue": "MUDDATI ÖTGAN."
+  "alert.deletion_overdue": "MUDDATI ÖTGAN.",
+  "alert.deletion_stopped": "Moduldagi öçiriş töxtatildi: ID sörovni endi takrorlay olmaydi (identifikator saqlanmagan). Bu — insident.\nModul: {module}\nSörov: {requested}\nMuddat (ADR-0021): {deadline} kuni oxirigaça. Öçirişni modul bilan tasdiqlang, söng deletion_log jadvalidagi qatorni qöl bilan belgilang: status = done, acknowledged_at = tasdiqlangan sana (ADR-0028)."
 }
