@@ -152,7 +152,7 @@ policy updated.
 | Profile, consents and consent log | while the base consent is in force. If you do not use AI Qadam for 3 years (no log-in and no contact with the bots), the profile is deleted. We warn you in Telegram through the AI Qadam bot you use 30 days before; if you log in or write to the bot in that time, the profile stays |
 | Phone number | together with the profile |
 | Modules' own records | under the module's rules, but no longer than the consent to the module is in force and the account exists |
-| Telegram ID for re-sending a deletion request to modules | about 65 minutes after the deletion; if a module has not acknowledged it — until it does, at most 7 days |
+| Telegram ID for re-sending a deletion request to modules | up to 2 hours after the deletion; if a module has not acknowledged it — until it does, at most 7 days |
 | Deletion log | 35 days after the module acknowledged the deletion. The log holds no profile — only a keyed hash (HMAC) of the Telegram ID, the module name, a status and two dates |
 | Backups on the server | up to 14 days |
 | Encrypted backups in Cloudflare R2 | up to 35 days. The copies are protected by a deletion lock, and until it ends a copy cannot be deleted early `[OPEN: O-6 — lock period; per the infrastructure documentation, 30 days]` |
